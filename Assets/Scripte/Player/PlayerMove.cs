@@ -16,7 +16,7 @@ public class PlayerMove : MonoBehaviour
         //////////////////////////////////////这里后面要改成从JSON加载
         hero = GameObject.Find("male");
         //////////////////////////////////////------------------------
-        target = GameObject.Find("Target");
+        target = GameObject.Find("PlayerMoveTarget");
         animator = hero.GetComponent<Animator>();
     }
 

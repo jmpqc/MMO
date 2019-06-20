@@ -21,7 +21,7 @@ public class CameraController : MonoBehaviour
         speedY = 8f; //横向旋转速度系数
         speedX = 5f; //纵向旋转速度系数
         distanceToCenter = 5f;//距离
-        disFactor = 0.1f;
+        disFactor = 0.1f; //距离缩放因子
     }
 
     // Update is called once per frame
@@ -46,7 +46,7 @@ public class CameraController : MonoBehaviour
         center.forward = Quaternion.AngleAxis(HorizontalAngle, Vector3.up) * center.forward; //横向旋中心z轴正向向量
 
         //限制纵向（累积）角度值
-        if (VerticalAngle < -80f) VerticalAngle = -80f; Debug.Log(VerticalAngle);
+        if (VerticalAngle < -80f) VerticalAngle = -80f;
         if (VerticalAngle > 20f) VerticalAngle = 20f;
         tempVector = Quaternion.AngleAxis(VerticalAngle, center.right) * tempVector; //纵向旋转临时向量
 
@@ -62,13 +62,13 @@ public class CameraController : MonoBehaviour
 
     void ChangeDistance()
     {
-        if(Input.GetAxis("Mouse ScrollWheel") > 0)
+        if (Input.GetAxis("Mouse ScrollWheel") > 0)
         {
-            distanceToCenter -= disFactor;
+            if (distanceToCenter > 2) distanceToCenter -= disFactor;
         }
         if (Input.GetAxis("Mouse ScrollWheel") < 0)
         {
-            distanceToCenter += disFactor;
+            if (distanceToCenter < 10) distanceToCenter += disFactor;
         }
     }
 }

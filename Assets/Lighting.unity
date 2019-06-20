@@ -264,7 +264,7 @@ GameObject:
   - component: {fileID: 472019981}
   - component: {fileID: 472019980}
   m_Layer: 0
-  m_Name: Target
+  m_Name: PlayerMoveTarget
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

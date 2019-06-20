@@ -6,19 +6,17 @@ public class TargetAlterPositon : MonoBehaviour
 {
     RaycastHit hitInfo; //射线信息
     Ray ray; //射线
-    float moveCoefficient; //Target移动系统
     Transform hero;//英雄
     // Use this for initialization
     void Start()
     {
         hero = GameObject.Find("Player").transform; //获得英雄物体
-        moveCoefficient = 3f; //移动系数的初值
     }
 
     // Update is called once per frame
     void Update()
     {
-        AlterTargetPosition(); //改变Target位置
+        AlterTargetPosition(); //改变Target位置        
     }
 
 
@@ -48,9 +46,32 @@ public class TargetAlterPositon : MonoBehaviour
         {
             float typeH = Input.GetAxis("Horizontal");
             float typeV = Input.GetAxis("Vertical");
-            //根据Player的位置和键盘的方向键改变Target的位置
-            transform.position = new Vector3(hero.position.x + typeH * moveCoefficient, hero.position.y, hero.position.z + typeV * moveCoefficient);
+            transform.position = hero.position; //让Target从英雄的位置开始出发，改变位置
+
+            //第一个参数是摄像机自身坐标系的right向量，第二个参数是摄像机位置指向地面的向量
+            Vector3 projectX = VectorProject(Camera.main.transform.right, new Vector3(Camera.main.transform.position.x, 0, Camera.main.transform.position.z) - Camera.main.transform.position);
+            transform.right = projectX.normalized; //目标物体与摄像机投影的方向一致
+            //根据摄像机的方向和键盘方向盘改变Target的位置
+
+            Vector3 v1= new Vector3(transform.position.x, transform.position.y, transform.position.z); //从坐标原点到Target的向量
+            Vector3 v2 = transform.right * typeH; //键盘水平方法移动的分量
+            Vector3 v3 = transform.forward * typeV; //键盘垂直方向移动的分量
+            Vector3 v = v1 + v2 + v3; //目标位置
+            transform.position = Vector3.MoveTowards(transform.position, v, 2f);//移动Target
+
         }
+    }
+
+    /// <summary>
+    /// 求向量平面上的投影
+    /// </summary>
+    /// <param name="vector">向量</param>
+    /// <param planeNormal="vector">平面的法线</param>
+    /// <returns>投影向量</returns>
+    Vector3 VectorProject(Vector3 vector, Vector3 planeNormal)
+    {
+        Vector3 response = Vector3.ProjectOnPlane(vector, planeNormal); //求得投影
+        return response; //返回值
     }
 
 }
