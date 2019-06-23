@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
@@ -15,6 +17,8 @@ public class CameraController : MonoBehaviour
     float speedY; //绕Y轴旋转的速度
     float speedX; //绕X轴旋转的速度
 
+    string path; //摄像机配置文件的加载路径
+    CameraInfo cameraInfo; //用于保存从json文件中读取的摄像机信息的对象
     void Start()
     {
         center = GameObject.Find("CenterAroundTheCamera").transform; //获得摄像机旋转参照中心的transform
@@ -22,6 +26,7 @@ public class CameraController : MonoBehaviour
         speedX = 5f; //纵向旋转速度系数
         distanceToCenter = 5f;//距离
         disFactor = 0.1f; //距离缩放因子
+        LoadJsonSettings(); //加载摄像机旋转和位置信息
     }
 
     // Update is called once per frame
@@ -71,4 +76,54 @@ public class CameraController : MonoBehaviour
             if (distanceToCenter < 10) distanceToCenter += disFactor;
         }
     }
+
+    void PathSetting()
+    {
+#if UNITY_EDITOR
+
+        path = @"C:\Users\dream\Desktop\UnityProjects\MMO\Configuration\camera.json";
+
+#else
+
+        path="";
+
+#endif
+
+    }
+    /// <summary>
+    /// 从json文件中读取摄像机的旋转和位置信息并写入变量中
+    /// </summary>
+    void LoadJsonSettings()
+    {
+        PathSetting();//设置配置文件的路径
+        FileInfo fileInfo = new FileInfo(path); //读取文件的属性信息
+        if (fileInfo.Exists)
+        {
+            string jsonText = File.ReadAllText(path); //读取json文件内容
+            cameraInfo = JsonUtility.FromJson<CameraInfo>(jsonText); //将json内容转化成HeroInfo类的对象
+
+            HorizontalAngle = cameraInfo.hAngle; //上一次离开游戏时，摄像机的的横向旋转量
+            VerticalAngle = cameraInfo.vAngle; //上一次离开游戏时，摄像机的纵向旋转量
+            distanceToCenter = cameraInfo.distance; //上一次离开游戏时，摄像机与角色之间的距离
+        }
+    }
+
+    private void OnDisable()
+    {
+        cameraInfo.hAngle = HorizontalAngle; //将当前摄像机的横向旋转存入json
+        cameraInfo.vAngle = VerticalAngle ;//将当前摄像机的纵向旋转存入json
+        cameraInfo.distance = distanceToCenter; //将当前摄像机与角色的距离存入json
+        string json = JsonUtility.ToJson(cameraInfo, true); //将对象转换成字符串
+        File.WriteAllText(path, json, System.Text.Encoding.UTF8);
+    }
+
+
+}
+
+[Serializable]
+public class CameraInfo //与json对应的类，读取角色性别、位置和旋转等信息
+{
+    public float hAngle; //摄像机横向旋转角度
+    public float vAngle; //摄像机纵向旋转角度
+    public float distance; //摄像机与目标之前的距离
 }
