@@ -18,7 +18,7 @@ public class PlayerMove : MonoBehaviour
         target = GameObject.Find("PlayerMoveTarget");//英雄在寻路追踪的目标物体
         PathSetting();//设置配置文件的路径
         FileInfo fileInfo = new FileInfo(path); //读取文件的属性信息
-        if (fileInfo.Exists)
+        if (fileInfo.Exists) //如果json配置文件存在，读取并设置属性信息
         {
             string jsonText = File.ReadAllText(path); //读取json文件内容
             heroInfo = JsonUtility.FromJson<HeroInfo>(jsonText); //将json内容转化成HeroInfo类的对象
@@ -45,13 +45,23 @@ public class PlayerMove : MonoBehaviour
         }
 
         
-        animator = hero.GetComponent<Animator>();
+        animator = hero.GetComponent<Animator>(); //获得动画控制器
     }
 
     // Update is called once per frame
     void Update()
     {
         HeroMoving(); //英雄移动位置
+
+        ///下面是设置动画
+        if (GetComponent<NavMeshAgent>().remainingDistance != 0)
+        {
+            AnimationSetHeroRun();
+        }
+        else
+        {
+            AnimationSetHeroIdle();
+        }
     }
 
     /// <summary>
@@ -77,6 +87,17 @@ public class PlayerMove : MonoBehaviour
 
 #endif
 
+    }
+
+    void AnimationSetHeroIdle()
+    {
+        animator.SetBool("MOVING", false);
+        animator.SetBool("CASTING", false);
+        animator.SetBool("DEAD", false);
+    }
+    void AnimationSetHeroRun()
+    {
+        animator.SetBool("MOVING", true);
     }
 
     private void OnDisable()
