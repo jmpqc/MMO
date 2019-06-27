@@ -5,7 +5,7 @@ using UnityEngine.AI;
 using System.IO;
 using System;
 
-public class PlayerMove : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     GameObject target; //英雄当前的移到目标位置
     GameObject hero; //当前英雄，通过预置体实例化，与当前脚本一同桂在 Player物体上

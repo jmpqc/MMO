@@ -19,6 +19,12 @@ public class CameraController : MonoBehaviour
 
     string path; //摄像机配置文件的加载路径
     CameraInfo cameraInfo; //用于保存从json文件中读取的摄像机信息的对象
+
+    float maxDistance; //摄像机与角色之间的大最距离
+    float minDistance; //摄像机与角色之间的小最距离
+
+    float maxAngle; //摄像机纵向旋转的最大角度
+    float minAngle; //摄像机纵向旋转的最小角度
     void Start()
     {
         center = GameObject.Find("CenterAroundTheCamera").transform; //获得摄像机旋转参照中心的transform
@@ -27,6 +33,12 @@ public class CameraController : MonoBehaviour
         distanceToCenter = 5f;//距离
         disFactor = 0.1f; //距离缩放因子
         LoadJsonSettings(); //加载摄像机旋转和位置信息
+
+        maxDistance = 5f;
+        minDistance = 2f;
+
+        maxAngle = 0f;
+        minAngle = -80f;
     }
 
     // Update is called once per frame
@@ -51,8 +63,8 @@ public class CameraController : MonoBehaviour
         center.forward = Quaternion.AngleAxis(HorizontalAngle, Vector3.up) * center.forward; //横向旋中心z轴正向向量
 
         //限制纵向（累积）角度值
-        if (VerticalAngle < -80f) VerticalAngle = -80f;
-        if (VerticalAngle > 20f) VerticalAngle = 20f;
+        if (VerticalAngle < -80f) VerticalAngle = minAngle;
+        if (VerticalAngle > 0f) VerticalAngle = maxAngle;
         tempVector = Quaternion.AngleAxis(VerticalAngle, center.right) * tempVector; //纵向旋转临时向量
 
         transform.position = center.position + (tempVector.normalized * distanceToCenter); //依据中心位置、临时向量、和距离值改变摄像机的位置
@@ -69,11 +81,11 @@ public class CameraController : MonoBehaviour
     {
         if (Input.GetAxis("Mouse ScrollWheel") > 0)
         {
-            if (distanceToCenter > 2) distanceToCenter -= disFactor;
+            if (distanceToCenter > minDistance) distanceToCenter -= disFactor;
         }
         if (Input.GetAxis("Mouse ScrollWheel") < 0)
         {
-            if (distanceToCenter < 10) distanceToCenter += disFactor;
+            if (distanceToCenter < maxDistance) distanceToCenter += disFactor;
         }
     }
 
