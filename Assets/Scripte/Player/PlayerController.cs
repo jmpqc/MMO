@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     GameObject hero; //当前英雄，通过预置体实例化，与当前脚本一同桂在 Player物体上
     Animator animator; //英雄的动画
     HeroInfo heroInfo; //存储从json文件读取的角色信息
+    NavMeshAgent nma; //角色身上的NavMeshAgent组件
     string path; //角色配置文件的加载路径
                  // Use this for initialization
     void Start()
@@ -44,7 +45,7 @@ public class PlayerController : MonoBehaviour
 
         }
 
-        
+        nma = GetComponent<NavMeshAgent>();
         animator = hero.GetComponent<Animator>(); //获得动画控制器
     }
 
@@ -54,7 +55,7 @@ public class PlayerController : MonoBehaviour
         HeroMoving(); //英雄移动位置
 
         ///下面是设置动画
-        if (GetComponent<NavMeshAgent>().remainingDistance != 0)
+        if (nma.remainingDistance != 0)
         {
             AnimationSetHeroRun();
         }
@@ -69,9 +70,9 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     void HeroMoving()
     {
-        if (target)
+        if (target && nma.hasPath) //如果目标位置不为空，并且目标与角色不在同一个位置，就要开始寻路
         {
-            GetComponent<NavMeshAgent>().destination = target.transform.position; //设置寻路目标
+            nma.SetDestination(target.transform.position); //设置寻路目标
         }
     }
 

@@ -15,7 +15,6 @@ public class MiniMapNavigate : MonoBehaviour, IPointerDownHandler, IPointerEnter
         mapRectX = GetComponent<RectTransform>().sizeDelta.x;
         mapRectY = GetComponent<RectTransform>().sizeDelta.y;
 
-
     }
 
     // Update is called once per frame

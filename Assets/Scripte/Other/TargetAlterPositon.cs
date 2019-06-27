@@ -42,8 +42,11 @@ public class TargetAlterPositon : MonoBehaviour
             ray = Camera.main.ScreenPointToRay(Input.mousePosition); //发出射线
             if (Physics.Raycast(ray, out hitInfo, 1000)) //判断射线是否穿过了某个物体
             {
-                transform.position = hitInfo.point + new Vector3(0, 0.05f, 0); //目标点的移到鼠标点击的位置
-                GetComponent<MeshRenderer>().enabled = true; //用图片显示位置
+                if (hitInfo.collider.tag == "Ground")
+                {
+                    transform.position = hitInfo.point + new Vector3(0, 0.05f, 0); //目标点的移到鼠标点击的位置
+                    GetComponent<MeshRenderer>().enabled = true; //用图片显示位置
+                }
             }
         }
         if (Input.GetMouseButtonUp(0))
