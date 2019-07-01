@@ -45,11 +45,15 @@ public class MiniMapNavigate : MonoBehaviour, IPointerDownHandler, IPointerEnter
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        pointOnMap.position = eventData.position; //将PointClickOnMap物体移动到鼠标点击的位置
-        float proportionX = pointOnMap.localPosition.x / mapRectX; //每次点击后，鼠标在地图上点击的位置的X坐标占地图X轴向尺寸的百分比
-        float proprotionY = pointOnMap.localPosition.y / mapRectY; //每次点击后，鼠标在地图上点击的位置的Y坐标占地图Y轴向尺寸的百分比
-        Vector2 p = new Vector2(proportionX, proprotionY); //将两个方向的百分比放在一个Vector2变量中
-        TargetAlterPositon.Instance.FollowMap(p); //鼠标在地图上点击后，Player根据位置开始寻路
+        if (eventData.button == PointerEventData.InputButton.Left)
+        {
+            pointOnMap.position = eventData.position; //将PointClickOnMap物体移动到鼠标点击的位置
+            float proportionX = pointOnMap.localPosition.x / mapRectX; //每次点击后，鼠标在地图上点击的位置的X坐标占地图X轴向尺寸的百分比
+            float proprotionY = pointOnMap.localPosition.y / mapRectY; //每次点击后，鼠标在地图上点击的位置的Y坐标占地图Y轴向尺寸的百分比
+            Vector2 p = new Vector2(proportionX, proprotionY); //将两个方向的百分比放在一个Vector2变量中
+            TargetAlterPositon.Instance.FollowMap(p); //鼠标在地图上点击后，Player根据位置开始寻路
+        }
+
     }
 
     public void OnPointerEnter(PointerEventData eventData)
