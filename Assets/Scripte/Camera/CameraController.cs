@@ -34,7 +34,7 @@ public class CameraController : MonoBehaviour
         disFactor = 0.1f; //距离缩放因子
         LoadJsonSettings(); //加载摄像机旋转和位置信息
 
-        maxDistance = 10f;
+        maxDistance = 5f;
         minDistance = 2f;
 
         maxAngle = 0f;

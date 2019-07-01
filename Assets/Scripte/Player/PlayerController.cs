@@ -21,7 +21,7 @@ public class PlayerController : MonoBehaviour
     public NavMeshAgent nma; //角色身上的NavMeshAgent组件
     string path; //角色配置文件的加载路径
 
-    List<Transform> MaleEquipments = new List<Transform>(); //角色的装备
+    List<Animator> MaleEquipments = new List<Animator>(); //角色的装备
                  // Use this for initialization
     private void Awake()
     {
@@ -55,7 +55,7 @@ public class PlayerController : MonoBehaviour
                 {
                     if (sub.name.ToLower().Contains("male_warrior"))
                     {
-                        MaleEquipments.Add(sub);
+                        MaleEquipments.Add(sub.GetComponent<Animator>());
                     }
                 }
 
@@ -123,11 +123,11 @@ public class PlayerController : MonoBehaviour
         animator.SetBool("CASTING", false);
         animator.SetBool("DEAD", false);
 
-        foreach(Transform equipment in MaleEquipments)
+        foreach(Animator equipment in MaleEquipments)
         {
-            equipment.GetComponent<Animator>().SetBool("MOVING", false);
-            equipment.GetComponent<Animator>().SetBool("CASTING", false);
-            equipment.GetComponent<Animator>().SetBool("DEAD", false);
+            equipment.SetBool("MOVING", false);
+            equipment.SetBool("CASTING", false);
+            equipment.SetBool("DEAD", false);
         }
     }
     /// <summary>
@@ -136,9 +136,9 @@ public class PlayerController : MonoBehaviour
     void AnimationSetHeroRun()
     {
         animator.SetBool("MOVING", true);
-        foreach (Transform equipment in MaleEquipments)
+        foreach (Animator equipment in MaleEquipments)
         {
-            equipment.GetComponent<Animator>().SetBool("MOVING", true);
+            equipment.SetBool("MOVING", true);
         }
     }
 
